@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant Stopwatch</title>
+  <style>
+    /* Global Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #f4f4f4, #dfe6e9);
+    }
+
+    /* Outer Container */
+    .outer-container {
+      background: #ffffff;
+      border-radius: 25px;
+      padding: 40px;
+      width: 420px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      transition: 0.3s;
+    }
+
+    .outer-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    /* Inner Container */
+    .inner-container {
+      background: #f9f9f9;
+      border-radius: 20px;
+      padding: 30px 20px;
+      width: 100%;
+      text-align: center;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .time-display {
+      font-size: 3rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin: 20px 0;
+      color: #222;
+      font-family: 'Courier New', monospace;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      outline: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    .btn:hover {
+      background: #357ABD;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="outer-container">
+    <div class="inner-container">
+      <h1>Stopwatch</h1>
+      <div class="time-display" id="timeDisplay">00:00:00.000</div>
+
+      <div class="buttons">
+        <button class="btn" id="startBtn">Start</button>
+        <button class="btn" id="pauseBtn">Pause</button>
+        <button class="btn" id="resetBtn">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const timeDisplay = document.getElementById('timeDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+    let isRunning = false;
+
+    function formatTime(ms) {
+      const milliseconds = ms % 1000;
+      const seconds = Math.floor(ms / 1000) % 60;
+      const minutes = Math.floor(ms / (1000 * 60)) % 60;
+      const hours = Math.floor(ms / (1000 * 60 * 60));
+
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`;
+    }
+
+    function startStopwatch() {
+      if (!isRunning) {
+        isRunning = true;
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          timeDisplay.textContent = formatTime(elapsedTime);
+        }, 10);
+      }
+    }
+
+    function pauseStopwatch() {
+      if (isRunning) {
+        isRunning = false;
+        clearInterval(timerInterval);
+      }
+    }
+
+    function resetStopwatch() {
+      clearInterval(timerInterval);
+      isRunning = false;
+      elapsedTime = 0;
+      timeDisplay.textContent = "00:00:00.000";
+    }
+
+    startBtn.addEventListener('click', startStopwatch);
+    pauseBtn.addEventListener('click', pauseStopwatch);
+    resetBtn.addEventListener('click', resetStopwatch);
+  </script>
+
+</body>
+</html>
